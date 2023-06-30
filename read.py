@@ -23,8 +23,19 @@ def load_single_data(data_dir, date = 20210104, jkey=2002594):
     try:
         order = pd.read_parquet(data_dir / f'{jkey}_order.parquet')
         trade = pd.read_parquet(data_dir / f'{jkey}_trade.parquet')
+        #snapshot = pd.read_parquet(data_dir / f'{jkey}_snapshot.parquet')
+    except FileNotFoundError:
+        raise Exception(f'error load single data in {data_dir}')
+
+    return order, trade#, snapshot
+
+def load_snapshot(data_dir, date = 20210104, jkey=2002594):
+    '''single date: 20210104 - jkey: 2002594'''
+    data_dir /= 'data_single'
+    data_dir /= f'{date}'
+    try:
         snapshot = pd.read_parquet(data_dir / f'{jkey}_snapshot.parquet')
     except FileNotFoundError:
         raise Exception(f'error load single data in {data_dir}')
 
-    return order, trade, snapshot
+    return snapshot
