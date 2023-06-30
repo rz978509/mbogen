@@ -127,15 +127,6 @@ def eval_obr(mbo, snapshot):
     match_cnt = (
         np.abs(lv2_mbo[lv2_eval_col_ls].values - lv2_mbo[eval_col_ls].values) < eps
     ).all(1).sum()
-    print((
-        np.abs(lv2_mbo[lv2_eval_col_ls].values - lv2_mbo[eval_col_ls].values) < eps
-    ).any(0),match_cnt)
-    for i in range(len(lv2_mbo)):
-        if (np.sum(np.abs(lv2_mbo.loc[i][lv2_eval_col_ls].values - lv2_mbo.loc[i][eval_col_ls].values) < eps)) != 43:
-            print(lv2_mbo.loc[i][lv2_eval_col_ls].to_frame().T)
-            print(lv2_mbo.loc[i][eval_col_ls].to_frame().T)
-            print(lv2_mbo.loc[i]['obe_seq_num'])
-            exit()
     match_prop = match_cnt / snapshot.shape[0]
 
     return match_prop

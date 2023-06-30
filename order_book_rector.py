@@ -17,7 +17,7 @@ class OrderBookRector():
         os.makedirs("./tmpdatainput/data_single",exist_ok=True)
         os.makedirs("./tmpdataoutput",exist_ok=True)
         date = int(order.iloc[0]["yyyymmdd"])
-        print(order,date,jkeylist)
+        #print(order,date,jkeylist)
         jkey_size = []
         for key in jkeylist:
             jkey_size.append([key,len(order.loc[order['jkey']==key])+len(trade.loc[trade['jkey']==key])])

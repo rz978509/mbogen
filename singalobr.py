@@ -53,7 +53,7 @@ def auction():
         if price not in ord_list:
             ord_list[price] = 0
         order_head += 1
-        now_order = next(orderiter)[1]
+        now_order = next(orderiter)
     auction_bid = sorted([[p,q] for p,q in auction_bid.items()],key = lambda x:-x[0])
     auction_ask = sorted([[p,q] for p,q in auction_ask.items()])
     while bid_head < len(auction_bid) and ask_head < len(auction_ask) and auction_bid[bid_head][0] >= auction_ask[ask_head][0]:
@@ -71,7 +71,7 @@ def auction():
         tot_amt += now_trade['trade_tpx'] * now_trade['trade_tvl']
         last = now_trade['trade_tpx']
         trade_head += 1
-        now_trade = next(tradeiter)[1]
+        now_trade = next(tradeiter)
 
 bid_list = None
 ask_list = None
@@ -155,7 +155,7 @@ def main():
                 edit_order_book(now_order['order_opx'], -now_order['order_qty'], now_order['order_side'])
             gen_snap()
             order_head += 1
-            now_order = next(orderiter)[1]
+            now_order = next(orderiter)
             continue
         d_qty = now_order['order_qty']
         while trade_head <t.shape[0] and now_trade['bid_order_id'] <= last_obe_seq_num and now_trade['ask_order_id'] <= last_obe_seq_num:
@@ -167,7 +167,7 @@ def main():
             # decrease qty in order book
             edit_order_book(now_trade['trade_tpx'], -now_trade['trade_tvl'], 3-now_order['order_side']) # 3-x to get other side
             trade_head += 1
-            now_trade = next(tradeiter)[1]
+            now_trade = next(tradeiter)
         # increase dty in order book
         if d_qty > 0:
             if now_order['msg_order_flag'] == 3: # 本方最优价格申报
@@ -187,7 +187,7 @@ def main():
             last_obe_seq_num = _
             gen_snap()
         order_head += 1
-        now_order = next(orderiter)[1]
+        now_order = next(orderiter)
 
     #print(print_snap())
     if len(sys.argv)>=3:
@@ -209,10 +209,12 @@ if __name__ == "__main__":
         o,t = load_single_data(dir_path,date,jkey)
     o = o.sort_values(by=['jkey', 'obe_seq_num', "hhmmss_nano"])
     t = t.sort_values(by=['jkey', 'obe_seq_num', "hhmmss_nano"])
-    orderiter = o.iterrows()
-    tradeiter = t.iterrows()
-    now_order = next(orderiter)[1]
-    now_trade = next(tradeiter)[1]
+    #orderiter = o.iterrows()
+    #tradeiter = t.iterrows()
+    orderiter = iter(o.to_dict('records'))
+    tradeiter = iter(t.to_dict('records'))
+    now_order = next(orderiter)
+    now_trade = next(tradeiter)
     jkey = now_order["jkey"]
     date = now_order["date"]
     main()
